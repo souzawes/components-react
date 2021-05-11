@@ -1,0 +1,15 @@
+
+.container-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: stretch;
+
+    padding: .5rem;
+}
+
+li {
+    width: 90%;
+}

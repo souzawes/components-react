@@ -1,31 +1,41 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import Button from '../Button';
-import Item from '../Item';
+import List from '../List';
 
 import './styles.css';
 
-
 const Card = () => {    
     
-    const [ item, setItem ] = useState(0);
+    const [ listItems, setListItems ] = useState([]);
+    const [ item, setItem ] = useState('');    
 
-    function incrementItem() {
-        setItem(item + 1);    
+    function onChange(event) {
+        setItem(event.target.value);
+        // console.log(item);
     }
 
-    function decrementItem() {
-        if (item === 0) {
-            setItem(0);
-        }else {
-            setItem(item - 1);
+    function incrementList() {
+        // Novo objeto dinâmico,
+        if(item === '') {
+            // console.log('empty input');
+            return
         }
+        const newItem = {
+            name: `${item}`,
+            id: listItems.length + 1,
+        }
+        
+        // Adiciona no final da lista
+        setListItems(listItems => [...listItems, newItem]);
     }
+ 
+    function decrementList(id) {
+        const newList = listItems.filter((item) => item.id !== id);
 
-    function addItem(index) {
-        return <Item>Item {index}</Item>;
+        setListItems(newList);
     }
-
+    
     return(
         <div className="card">
             <div className="card-header">
@@ -33,19 +43,22 @@ const Card = () => {
             </div>
             <div className="card-body">
                 <div className="container-buttons">
-                    <Button className="btn btn-success" onClick={incrementItem}>
-                        Adiciona um item
+                    <input 
+                        className="form-control form-control-lg" 
+                        type="text" 
+                        placeholder="Digite o item a ser inserido" 
+                        aria-label=".form-control-lg example"                        
+                        onChange={onChange}
+                    />                    
+                    <Button className="btn btn-success" onClick={incrementList}>
+                        Adicionar item
                     </Button>
 
-                    <Button className="btn btn-danger" onClick={decrementItem}>
-                        Remove um item
-                    </Button>
-
-                    <p className="card-text"> Existem <strong>{item}</strong> itens na lista: </p>
+                    <p className="card-text"> Existem <strong>{listItems.length}</strong> itens na lista: </p>
                 </div>
                 <div className="container-list">
-                    <ul>        
-                       {(item !== 0) ? addItem(item) : <Item>Lista vazia</Item>}
+                    <ul className="list">        
+                        <List list={listItems} onRemove={decrementList} />
                     </ul>                
                 </div>
             </div>
